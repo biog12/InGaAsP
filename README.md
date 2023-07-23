@@ -3,7 +3,7 @@ InGaAsP caculation
 
 基于https://github.com/krzyklo/ingaasp2rcpp 项目
 
-#pic
+# pic
 画出x,y和Eg，strain的关系图
 
 ![Alt text](Figure_1.png)
