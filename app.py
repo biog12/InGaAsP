@@ -237,8 +237,8 @@ st.title('Ga(x)In(1-x)As(y)P(1-y) Bandgap Calculator')
 # Input widgets
 pl = st.number_input('PL (nm)', value=1300)
 
-# Epsilion for ppm
-eps = st.number_input('Epsilon(ppm)', value=0.0, step=0.000001)*0.000001
+# Input Epsilion for ppm
+eps = st.number_input('Epsilon(ppm)', value=0.0, step=0.000001)/1000000
 
 x = st.number_input('x', value=0.201, step=0.001, format='%.3f')
 y = st.number_input('y', value=0.701, step=0.001, format='%.3f')
@@ -257,6 +257,6 @@ with col1:
 with col2:
     if st.button('Calculate PL,eps'):
         lamda, eps = PQ_lamda_eps_XY(x, y)
-        eps=eps*100000 #for ppm
+        eps=eps*1000000 #for ppm
         st.write(f'Wavelength: {lamda:.1f} nm')
         st.write(f'Epsilon: {eps:.1f} ppm')
