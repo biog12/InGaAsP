@@ -14,9 +14,10 @@ processing conditions such as total pressure
 @author: biog12
 """
 
+
 import numpy as np
 from scipy.interpolate import interp2d
-
+import streamlit as st
 
 # Define the x and y arrays
 x = [0, 0.25, 0.5, 0.75, 1]
@@ -38,11 +39,19 @@ Z = np.transpose(data)
 # Create a 2D interpolation function
 f = interp2d(x, y, Z)
 
-#Test the interpolation function
-temp = 625
-x_val = 0.75
+# Streamlit app
+st.title('P/As分配系数calculation App')
+
+# Input temp and x_val
+temp = st.number_input('输入温度 Temp:', value=645)
+x_val = st.number_input('输入In_组分:', value=0.92)
+
+# Calculate result using interpolation function
 result = f(x_val, temp)
-print(result)
 
-
-#-----------------------
+# Display result
+# Calculate result using interpolation function
+if st.button('Calculate'):
+    result = f(x_val, temp)
+    # Display result
+    st.write('Result:', result)
