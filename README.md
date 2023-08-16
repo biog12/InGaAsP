@@ -15,3 +15,9 @@ InGaAsP caculation
 已知x,y,计算PL和strain
 
 ![Alt text](image.png)
+
+---
+
+已知温度和In组分，计算P/As分配系数
+
+![Alt text](image-1.png)
