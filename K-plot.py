@@ -12,15 +12,16 @@ def wl(y):
     wl=1240.0/Eg
     return(wl)
 
-# 设置x的取值范围
+# 设置x的取值范围,x为Gasphase
 x = np.linspace(0, 1, 100)
 
 # 设置k的值
-k = 0.026
+k = 0.0409
 
-# 计算对应于每个x值的y值
+# 计算对应于每个x值的y值,y为solidphase
 y = function(x, k)
-y2=wl(y)
+
+z=wl(y)
 
 # 绘制函数图像
 fig,ax1=plt.subplots()
@@ -29,10 +30,11 @@ ax2=ax1.twinx()
 ax1.plot(x, y,color='red')
 ax1.set_xlabel('x-Gas phase')
 ax1.set_ylabel('y-Solid phase')
-##
-ax2.plot(y, y2,color='black')
+
+# fig,ax2=plt.subplots()
+ax2.plot(y, z,color='black')
 ax2.set_ylabel('wavelength(nm)')
 
 plt.title('Gas vs Solid Phase and Wavelength')
-plt.grid(True)
+plt.grid(True,axis='both')
 plt.show()
