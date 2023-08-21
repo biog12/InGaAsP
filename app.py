@@ -162,16 +162,6 @@ def Eg2PL_f1(Eg):
     return (1e9*h*c/Eg/q) # PL in nm
 
 #*****************************************************
-
-
-
-
-
-
-
-
-
-
 # 全局变量  
 EG2MATCH = None  
 PQ_EPS_XY = None
@@ -229,7 +219,7 @@ def PQ_lamda_eps_XY(x,y):
     return (lamda,-eps)
 #*****************************************************
 
-###################################################################################################################
+#######Ga(x)In(1-x)As(y)P(1-y) Bandgap Calculator#############################################################
 import streamlit as st
 
 st.title('Ga(x)In(1-x)As(y)P(1-y) Bandgap Calculator')
@@ -260,13 +250,15 @@ with col2:
         eps=eps*1000000 #for ppm
         st.write(f'Wavelength: {lamda:.1f} nm')
         st.write(f'Epsilon: {eps:.1f} ppm')
-###################################################################################################################
+
+
+#######Gas Composition Calculator#################################################################################
 st.title('Gas Composition Calculator')
 
 def calculate_new_tmgas(tmgas, ga_composition):
     old_x = ga_composition
     old_1_x = 1 - ga_composition
-    new_x = st.number_input('Enter new Ga composition:', min_value=0.1, max_value=20.0, value=ga_composition)
+    new_x = st.number_input('Enter new Ga composition:', min_value=0.0, max_value=20.0, value=ga_composition)
     new_1_x = 1 - new_x
     new_tmgas = (new_x / new_1_x) / (old_x / old_1_x) * tmgas
     return new_tmgas
@@ -275,7 +267,7 @@ def calculate_new_tmgas(tmgas, ga_composition):
 def calculate_new_ash3(ash3, as_composition):
     old_y = as_composition
     old_1_y = 1 - as_composition
-    new_y = st.number_input('Enter new As composition:', min_value=0.1, max_value=100.0, value=as_composition)
+    new_y = st.number_input('Enter new As composition:', min_value=0.0, max_value=100.0, value=as_composition)
     new_1_y = 1 - new_y
     new_ash3 = (new_y / new_1_y) / (old_y / old_1_y) * ash3
     return new_ash3
@@ -287,18 +279,18 @@ with left:
 
     st.header('TMGa Calculation')
     tmgas_input = st.number_input('Enter original TMGa:', value=3)
-    ga_composition_input = st.number_input('Enter original Ga composition:', min_value=0.1, max_value=20.0, value=0.1)
+    ga_composition_input = st.number_input('Enter original Ga composition:', min_value=0.0, max_value=20.0, value=0.1)
     new_tmgas_output = calculate_new_tmgas(tmgas_input, ga_composition_input)
     st.write(f'New TMGa:{new_tmgas_output:.1f}')
 
 with right:
     st.header('AsH3 Calculation')
     ash3_input = st.number_input('Enter original AsH3:', value=10.0)
-    as_composition_input = st.number_input('Enter original As composition:', min_value=0.1, max_value=100.0, value=0.5)
+    as_composition_input = st.number_input('Enter original As composition:', min_value=0.0, max_value=100.0, value=0.5)
     new_ash3_output = calculate_new_ash3(ash3_input, as_composition_input)
     st.write(f'New AsH3:{new_ash3_output:.1f}')
 
-####################################################################################################################
+########P/As分配系数calculation App##########################################################################
 import numpy as np
 from scipy.interpolate import interp2d
 import streamlit as st
