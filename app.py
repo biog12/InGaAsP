@@ -258,7 +258,7 @@ st.title('Gas Composition Calculator')
 def calculate_new_tmgas(tmgas, ga_composition):
     old_x = ga_composition
     old_1_x = 1 - ga_composition
-    new_x = st.number_input('Enter new Ga composition:', min_value=0.0, max_value=20.0, value=ga_composition)
+    new_x = st.number_input('Enter new Ga composition:', min_value=0.0, max_value=100.0, value=ga_composition)
     new_1_x = 1 - new_x
     new_tmgas = (new_x / new_1_x) / (old_x / old_1_x) * tmgas
     return new_tmgas
@@ -278,8 +278,8 @@ left, right = st.columns(2)
 with left:  
 
     st.header('TMGa Calculation')
-    tmgas_input = st.number_input('Enter original TMGa:', value=3)
-    ga_composition_input = st.number_input('Enter original Ga composition:', min_value=0.0, max_value=20.0, value=0.1)
+    tmgas_input = st.number_input('Enter original TMGa:', value=3.0)
+    ga_composition_input = st.number_input('Enter original Ga composition:', min_value=0.0, max_value=100.0, value=0.1)
     new_tmgas_output = calculate_new_tmgas(tmgas_input, ga_composition_input)
     st.write(f'New TMGa:{new_tmgas_output:.1f}')
 
