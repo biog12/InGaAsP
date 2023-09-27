@@ -249,6 +249,8 @@ for x_val in x:
 # Create a meshgrid of x and y values
 X, Y = np.meshgrid(x, y)
 
+st.title('Ga(x)In(1-x)As(y)P(1-y)相图')
+
 # Create arrays of wavelengths and strains_xy values with swapped axes
 wavelengths_array = np.array([[results[(x_val, y_val)][0] for x_val in x] for y_val in y])
 strains_xy_array = np.array([[results[(x_val, y_val)][1] for x_val in x] for y_val in y])

@@ -16,6 +16,8 @@ def wl(y):
 # 设置x的取值范围,x为Gasphase
 x = np.linspace(0, 1, 100)
 
+st.title('气相与固相曲线图')
+
 # 设置k的值
 k = st.number_input('Enter k PH3/AsH3 distribution factor', value=0.0409)
 
