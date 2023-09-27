@@ -6,11 +6,13 @@ InxGa1-xAS1-yPy
 y/(1-y)=K(fAs/fP)
 
 DOI:10.1016/0022-0248(96)00295-3
+title:Methods to improve the P/As compositional uniformity of InGaAsP thin films prepared by MOCVD
 
 The P/As distribution coefficient K for growth of InGaAsP from 
 phosphine and arsine is strongly dependent on temperature and 
 the In/Ga content of the solid, and weekly dependent on other 
 processing conditions such as total pressure
+
 @author: biog12
 """
 

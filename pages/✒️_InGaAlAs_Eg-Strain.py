@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Jul 19 21:43:05 2023
+Created on Sat Jul 15 22:49:40 2023
 
 @author: biog1
 """
+#In(1-x-y)GaxAlyAs
+
 # Constants from tab.1  JOQE 35/5 1999
 
 a0_GaAs = 0.56533  
@@ -93,35 +95,35 @@ def dElh_f1(x, y):
 
 # PQ_Eg_unstrained
 def PQ_Eg_unstrained(x, y):
-    return (1.35+0.642*x-1.101*y+0.758*x*x+0.101*y*y-0.159*x*y-0.28*x*x*y+0.109*x*y*y) #eV
+    return (0.36+2.093*y+0.629*x+0.577*y*y+0.436*x*x+1.013*x*y-2.0*x*y*(1-x-y)) #eV
 
-# PQ_Eg_unstrained_f1
-def PQ_Eg_unstrained_f1(x, y):
-    return (1.35+0.668*x-1.068*y+0.758*x*x+0.078*y*y-0.069*x*y-0.332*x*x*y+0.03*x*y*y) #eV
+# # PQ_Eg_unstrained_f1
+# def PQ_Eg_unstrained_f1(x, y):
+#     return (1.35+0.668*x-1.068*y+0.758*x*x+0.078*y*y-0.069*x*y-0.332*x*x*y+0.03*x*y*y) #eV
 
 # PQ_interp_a0
 def PQ_interp_a0(x, y):
-    return (a0_GaAs*x*y + a0_GaP*x*(1-y) + a0_InAs*(1-x)*y + a0_InP*(1-x)*(1-y))
+    return (a0_GaAs*x + a0_AlAs*y + a0_InAs*(1-x-y))
 
 # PQ_interp_c11
 def PQ_interp_c11(x, y):
-    return (c11_GaAs*x*y + c11_GaP*x*(1-y) + c11_InAs*(1-x)*y + c11_InP*(1-x)*(1-y))
+    return (c11_GaAs*x + c11_AlAs*y + c11_InAs*(1-x-y))
 
 # PQ_interp_c12  
 def PQ_interp_c12(x, y):
-    return (c12_GaAs*x*y + c12_GaP*x*(1-y) + c12_InAs*(1-x)*y + c12_InP*(1-x)*(1-y))
+    return (c12_GaAs*x + c12_AlAs*y + c12_InAs*(1-x-y))
 
 # PQ_interp_ac
 def PQ_interp_ac(x, y):
-    return (ac_GaAs*x*y + ac_GaP*x*(1-y) + ac_InAs*(1-x)*y + ac_InP*(1-x)*(1-y))
+    return (ac_GaAs*x + ac_AlAs*y + ac_InAs*(1-x-y))
 
 # PQ_interp_av
 def PQ_interp_av(x, y):
-    return (av_GaAs*x*y + av_GaP*x*(1-y) + av_InAs*(1-x)*y + av_InP*(1-x)*(1-y))  
+    return (av_GaAs*x + av_AlAs*y + av_InAs*(1-x-y))  
 
 # PQ_interp_b
 def PQ_interp_b(x, y):
-    return (b_GaAs*x*y + b_GaP*x*(1-y) + b_InAs*(1-x)*y + b_InP*(1-x)*(1-y))
+    return (b_GaAs*x + b_AlAs*y + b_InAs*(1-x-y))
 
 # PQ_Echh_f1
 def PQ_Echh_f1(x, y):
@@ -162,6 +164,16 @@ def Eg2PL_f1(Eg):
     return (1e9*h*c/Eg/q) # PL in nm
 
 #*****************************************************
+
+
+
+
+
+
+
+
+
+
 # 全局变量  
 EG2MATCH = None  
 PQ_EPS_XY = None
@@ -171,12 +183,11 @@ def LATTICE_CONST(eps_xy):
   return a0_InP / (eps_xy + 1)
 
 # 根据X和应变计算Y
+# 计算Y时,Ga由(1-x-y)替换
 def PQ_Y_XSTRAIN(x, eps_xy):
   a0 = LATTICE_CONST(eps_xy)
-  nom = x * (a0_InP - a0_GaP) + a0 - a0_InP
-  denom = x * (a0_GaAs - a0_GaP - a0_InAs + a0_InP) + a0_InAs - a0_InP
-  return nom / denom
-
+  y=(a0-a0_GaAs*x-a0_InAs*(1-x))/(a0_AlAs-a0_InAs)
+  return y
 # 定义根函数
 def FUNC4ROOT(x):
   y = PQ_Y_XSTRAIN(x, PQ_EPS_XY)
@@ -184,7 +195,7 @@ def FUNC4ROOT(x):
   
 # 二分法终止条件
 def ROOT_TERMINATION(min_x, max_x):
-  return abs(max_x - min_x) <= 1e-8  
+  return abs(max_x - min_x) <= 1e-6  
 
 # 主函数
 def PQ_X_EGSTRAIN(eg, eps_xy):
@@ -194,23 +205,23 @@ def PQ_X_EGSTRAIN(eg, eps_xy):
   PQ_EPS_XY = eps_xy
 
   # 二分法寻根 
-  result = bisect(FUNC4ROOT, 0, 1, xtol=1e-6)
+  result = bisect(FUNC4ROOT, 0, 1, xtol=1e-8)
   return result
 
 
 #*****************************************************
-# cal x,y from lamda eps + for compress -for tensil,so ep=-eps
+# cal x,y from lamda eps + for compress -for tensil
 #*****************************************************
 def PQ_XY_Eg_strain(PL,eps):
-    ep=-eps
+    eps=-eps
     eg=1240.0/PL
-    x=PQ_X_EGSTRAIN(eg,ep)
-    y=PQ_Y_XSTRAIN(x,ep)
+    x=PQ_X_EGSTRAIN(eg,eps)
+    y=PQ_Y_XSTRAIN(x,eps)
     return (x,y)
 
 
 #*****************************************************
-# cal  Eg eps from x,y + for compress -for tensil,so ep=-eps
+# cal  Eg eps from x,y,eps + for compress -for tensil
 #*****************************************************
 def PQ_lamda_eps_XY(x,y): 
     eg=PQ_Eg_XY(x,y)
@@ -219,10 +230,13 @@ def PQ_lamda_eps_XY(x,y):
     return (lamda,-eps)
 #*****************************************************
 
-#######Ga(x)In(1-x)As(y)P(1-y) Bandgap Calculator#############################################################
+
+
+
+#######In(1-x-y)Ga(x)Al(y)As Bandgap Calculator#############################################################
 import streamlit as st
 
-st.title('Ga(x)In(1-x)As(y)P(1-y) Bandgap Calculator')
+st.title('In(1-x-y)Ga(x)Al(y)As Bandgap Calculator')
 
 # Input widgets
 pl = st.number_input('PL (nm)', value=1300)
@@ -230,12 +244,12 @@ pl = st.number_input('PL (nm)', value=1300)
 # Input Epsilion for ppm
 eps = st.number_input('Epsilon(ppm)', value=0.0, step=0.000001)/1000000
 
-x = st.number_input('x', value=0.2, step=0.001, format='%.3f')
-y = st.number_input('y', value=0.5, step=0.001, format='%.3f')
+x = st.number_input('x Ga%', value=0.2, step=0.001, format='%.3f')
+y = st.number_input('y Al%', value=0.5, step=0.001, format='%.3f')
+Z = st.number_input('1-x-y In%', value=1-x-y, format='%.3f')
 
-# Functions
 
-# Create a column layout for the buttons
+#Create a column layout for the buttons
 col1, col2 = st.columns(2)
 
 with col1:
@@ -251,85 +265,3 @@ with col2:
         st.write(f'Wavelength: {lamda:.1f} nm')
         st.write(f'Epsilon: {eps:.1f} ppm')
 
-
-#######Gas Composition Calculator#################################################################################
-st.title('Gas Composition Calculator')
-
-def calculate_new_tmgas(tmgas, ga_composition):
-    old_x = ga_composition
-    old_1_x = 1 - ga_composition
-    new_x = st.number_input('Enter new Ga composition:', min_value=0.0, max_value=100.0, value=ga_composition)
-    new_1_x = 1 - new_x
-    new_tmgas = (new_x / new_1_x) / (old_x / old_1_x) * tmgas
-    return new_tmgas
-
-# Function to calculate new AsH3
-def calculate_new_ash3(ash3, as_composition):
-    old_y = as_composition
-    old_1_y = 1 - as_composition
-    new_y = st.number_input('Enter new As composition:', min_value=0.0, max_value=100.0, value=as_composition)
-    new_1_y = 1 - new_y
-    new_ash3 = (new_y / new_1_y) / (old_y / old_1_y) * ash3
-    return new_ash3
-
-# Streamlit app
-left, right = st.columns(2)
-
-with left:  
-
-    st.header('TMGa Calculation')
-    tmgas_input = st.number_input('Enter original TMGa:', value=3.0)
-    ga_composition_input = st.number_input('Enter original Ga composition:', min_value=0.0, max_value=100.0, value=0.1)
-    new_tmgas_output = calculate_new_tmgas(tmgas_input, ga_composition_input)
-    st.write(f'New TMGa:{new_tmgas_output:.1f}')
-
-with right:
-    st.header('AsH3 Calculation')
-    ash3_input = st.number_input('Enter original AsH3:', value=10.0)
-    as_composition_input = st.number_input('Enter original As composition:', min_value=0.0, max_value=100.0, value=0.5)
-    new_ash3_output = calculate_new_ash3(ash3_input, as_composition_input)
-    st.write(f'New AsH3:{new_ash3_output:.1f}')
-
-########P/As分配系数calculation App##########################################################################
-import numpy as np
-from scipy.interpolate import interp2d
-import streamlit as st
-
-# Define the x and y arrays
-x = [0, 0.25, 0.5, 0.75, 1]
-y = [550, 600, 650, 700]
-
-# Define the data array
-data = [[0.0083, 0.02, 0.044, 0.088],
-        [0.0073, 0.018, 0.038, 0.077],
-        [0.0062, 0.015, 0.033, 0.066],
-        [0.0052, 0.012, 0.027, 0.055],
-        [0.0042, 0.01, 0.022, 0.044]]
-
-# Create a meshgrid of x and y values
-X, Y = np.meshgrid(x, y)
-
-# Transpose the data array to match the X and Y arrays
-Z = np.transpose(data)
-
-# Create a 2D interpolation function
-f = interp2d(x, y, Z)
-
-# Streamlit app
-st.title('P/As分配系数calculation App')
-
-# Input temp and x_val
-temp = st.number_input('输入温度 Temp:', value=645)
-x_val = st.number_input('输入In_组分:', value=0.92)
-
-# Calculate result using interpolation function
-result = f(x_val, temp)
-
-# Display result
-# Calculate result using interpolation function
-if st.button('Calculate'):
-    result = f(x_val, temp)
-    # Display result
-    st.write(f'分配系数:{result}')
-
-####################################################################################################################

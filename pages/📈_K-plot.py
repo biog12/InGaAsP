@@ -1,12 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
-# y solid ratio
-# x gas ratio
+import streamlit as st
+# y solid ratio P/As P:y As:1-y
+# x gas ratio PH3/AsH3 PH3:x AsH3:1-x
+# y/(1-y)=k*x/(1-x)
 # k distribution factor
 def function(x, k):
-    return (k*x)/(1-x+k*x)
-
+   return (k*x)/(1-x+k*x)
+   
 def wl(y):
     Eg=1.35-0.775*y+0.149*y*y
     wl=1240.0/Eg
@@ -16,7 +17,7 @@ def wl(y):
 x = np.linspace(0, 1, 100)
 
 # 设置k的值
-k = 0.0409
+k = st.number_input('Enter k PH3/AsH3 distribution factor', value=0.0409)
 
 # 计算对应于每个x值的y值,y为solidphase
 y = function(x, k)
@@ -37,4 +38,5 @@ ax2.set_ylabel('wavelength(nm)')
 
 plt.title('Gas vs Solid Phase and Wavelength')
 plt.grid(True,axis='both')
-plt.show()
+
+st.pyplot(fig)

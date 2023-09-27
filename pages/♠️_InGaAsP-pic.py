@@ -12,7 +12,7 @@ a0_GaAs = 0.56533
 a0_InAs = 0.60584
 a0_InP = 0.58688
 a0_GaP = 0.54505
-a0_AlAs = 0.54505
+a0_AlAs = 0.5660
 
 c11_GaAs = 11.879
 c11_InAs = 8.329
@@ -94,9 +94,8 @@ def dElh_f1(x, y):
     return (-Peps_f1(x,y)+Qeps_f1(x,y))
 
 # PQ_Eg_unstrained
-def PQ_Eg_unstrained(x, y):
+def PQ_Eg_unstrained(x, y):    
     return (1.35+0.642*x-1.101*y+0.758*x*x+0.101*y*y-0.159*x*y-0.28*x*x*y+0.109*x*y*y) #eV
-
 # PQ_Eg_unstrained_f1
 def PQ_Eg_unstrained_f1(x, y):
     return (1.35+0.668*x-1.068*y+0.758*x*x+0.078*y*y-0.069*x*y-0.332*x*x*y+0.03*x*y*y) #eV
@@ -237,7 +236,7 @@ def PQ_lamda_eps_XY(x,y):
 # Create a meshgrid of x and y values
 import numpy as np
 import matplotlib.pyplot as plt
-
+import streamlit as st
 # Define the x and y arrays
 x = np.arange(0, 1.1, 0.1)
 y = np.arange(0, 1.1, 0.1)
@@ -293,5 +292,5 @@ ax.text(0.05, 1, 'InAs', transform=ax.transAxes, fontsize=14, fontweight='bold')
 ax.text(0.05,-0.05, 'InP', transform=ax.transAxes, fontsize=14, fontweight='bold')
 ax.text(0.95, -0.05, 'GaP', transform=ax.transAxes, fontsize=14, fontweight='bold')
 ax.text(0.95, 1, 'GaAs', transform=ax.transAxes, fontsize=14, fontweight='bold')
-plt.show()
+st.pyplot(fig)
 
